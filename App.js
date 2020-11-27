@@ -1,11 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React , {useState} from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Modal } from 'react-native';
+import { Icon } from 'react-native-elements'
+
 
 export default function App() {
   const [price, onChangePrice] = useState("");
   const [discount, onChangeDiscount] = useState("");
   const [memory, setMemory] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   let savedMoney ;
   let finalPrice ;
@@ -26,21 +29,45 @@ export default function App() {
     else{}
   }
 
+  let meme = "987654321";
   const clearAndSave = () => {
-    setMemory([...memory, {
-      OriginalPrice: price,
-      DiscountRate: discount,
-      FinalPrice: finalPrice
-    }]);
+    setMemory([...memory, finalPrice]);
     savedMoney=finalPrice=error="";
     onChangeDiscount("");
     onChangePrice("");
+    meme = memory.map(i => i)
   }
 
   return (
     <View style={styles.container}>
+      <Modal visible={modalOpen}>
+        <View style={styles.modal}>
+          <View style={styles.mheader}>
+            <Text style={styles.headerText}>Memory</Text>
+            <Text style={styles.headerText}>
+              <Icon
+                raised
+                name='close'
+                type='font-awesome'
+                color='#000'
+                onPress={() => setModalOpen(false)}
+              />
+            </Text>
+        </View>
+            <Text>{meme}</Text>
+        </View>
+      </Modal>
       <View style={styles.header}>
         <Text style={styles.headerText}>Discount Calculator</Text>
+        <Text style={styles.headerText}>
+        <Icon
+          raised
+          name='database'
+          type='font-awesome'
+          color='#f50'
+          onPress={() => setModalOpen(true)}
+         />
+        </Text>
       </View>
       <View style={styles.display}>
         <TextInput 
@@ -77,6 +104,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f46b45'
   },
+  modal: {
+  },
   display: {
     flex: 1,
     justifyContent: "center"
@@ -92,15 +121,24 @@ const styles = StyleSheet.create({
     color: '#fff'
   }, 
   header: {
-    width: '100%',
-    height: 100
+    width: '80%',
+    height: 150,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+  },
+  mheader: {
+    width: '67%',
+    height: 150,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   headerText: {
     color: '#001510',
-    fontSize: 35,
+    fontSize: 30,
     marginTop: 70,
-    textAlign: "center",
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    margin: 0,
+    textAlign: 'center'
   },
   text: {
     fontSize: 18,
