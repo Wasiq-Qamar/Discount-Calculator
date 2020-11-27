@@ -1,14 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React , {useState} from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
 export default function App() {
   const [price, onChangePrice] = useState("");
   const [discount, onChangeDiscount] = useState("");
+  const [memory, setMemory] = useState([]);
 
   let savedMoney ;
   let finalPrice ;
-  let error ;
+  let error = "" ;
 
   const calcDiscount = () => {
     const localPrice = eval(price);
@@ -19,9 +20,21 @@ export default function App() {
       savedMoney = "Money Saved:   Rs. "+savedMoney;
       finalPrice = "Final Price:        Rs. "+finalPrice;
     }
-    else{
+    else if (price!=="" && discount!==""){
       error = "Discount cannot be greater than 100%";
     }
+    else{}
+  }
+
+  const clearAndSave = () => {
+    setMemory([...memory, {
+      OriginalPrice: price,
+      DiscountRate: discount,
+      FinalPrice: finalPrice
+    }]);
+    savedMoney=finalPrice=error="";
+    onChangeDiscount("");
+    onChangePrice("");
   }
 
   return (
@@ -48,6 +61,9 @@ export default function App() {
           <Text style={styles.text}>{error}</Text>
           <Text style={styles.text}>{savedMoney}</Text>
           <Text style={styles.text}>{finalPrice}</Text>
+        </View>
+        <View style={styles.reset}>
+          <Button title="Save" onPress={clearAndSave} color='#001510' />
         </View>
       </View>
     </View>
@@ -94,5 +110,9 @@ const styles = StyleSheet.create({
   },
   results: {
     marginTop: 30
+  },
+  reset: {
+    width: 150,
+    marginLeft: 100,
   }
 });
